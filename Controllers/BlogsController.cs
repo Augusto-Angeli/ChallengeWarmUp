@@ -21,15 +21,15 @@ namespace ChallengeNivelatorio.Controllers
         // GET: Blogs
         public async Task<IActionResult> Index()
         {
-            var list = await _context.Blog.OrderByDescending(x => x.CreationDate).ToListAsync();
-            return View(list);
+            var blogList = _context.Blog.Where(x => x.IsDeleted == false).OrderByDescending(c => c.CreationDate);
+            return View(blogList);
         }
 
         // GET: Home
         public async Task<IActionResult> Home()
         {
-            var list = await _context.Blog.OrderByDescending(x => x.CreationDate).ToListAsync();
-            return View(list);
+            var blogList = _context.Blog.Where(x => x.IsDeleted == false).OrderByDescending(c => c.CreationDate);
+            return View(blogList);
         }
 
         // GET: Blogs/SearchBlog
@@ -180,8 +180,9 @@ namespace ChallengeNivelatorio.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var blog = await _context.Blog.FindAsync(id);
-            _context.Blog.Remove(blog);
+            var blog= await _context.Blog.FindAsync(id);
+            //_context.Blog.Remove(blog);
+            blog.IsDeleted = true;
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Home));
         }       
